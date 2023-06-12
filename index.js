@@ -1,7 +1,11 @@
 var express = require("express")
 var cors = require("cors")
+const uuid = require('uuid');
 var  mysqlConnection = require('./config/connection');
 var app=express()
+//socket io
+const server = require('http').Server(app);
+const io = require('socket.io')(server);
 app.use(express.json())
 const bcrypt = require('bcrypt')
 //routes steup
@@ -9,6 +13,26 @@ app.use(cors())
 const filesRouter = require('./routes/files')
 app.use('/',filesRouter);
 
+
+
+io.on('connection', socket => {
+    console.log(`Socket ${socket.id} connected`);
+  
+    // Join a room
+    socket.on('join', roomId => {
+      socket.join(roomId);
+      console.log(`Socket ${socket.id} joined room ${roomId}`);
+    });
+  
+    // Send a message to a room
+    socket.on('message', ({ roomId, message }) => {
+      io.to(roomId).emit('message', message);
+    });
+  
+    socket.on('disconnect', () => {
+      console.log(`Socket ${socket.id} disconnected`);
+    });
+  });
 
 
 app.listen(3000, (err) =>{

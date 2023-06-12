@@ -6,6 +6,7 @@ var mysql =require('mysql')
 var  mysqlConnection = require('../config/connection');
 var fs = require ("fs");
 const bcrypt = require('bcrypt')
+const uuid = require('uuid');
 
  
 //admin registration
@@ -426,7 +427,19 @@ router.get('/hacker/slot', (req, res)=> {
        });
 
 
-    
+    //getting meeting link
+
+    router.get('/video-chat-link', (req, res) => {
+        const sessionId = uuid.v4();
+        const videoChatLink = `${req.protocol}://${req.get('host')}/video-chat/${sessionId}`;
+        res.json({ videoChatLink });
+        console.log(videoChatLink);
+      });
+      router.get('/', (req, res) => {
+        console.log("home page");
+      });
+
+
 
 module.exports = router;
 
