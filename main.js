@@ -7,62 +7,25 @@ app.use(express.json())
 const con = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    database:'scoring_points',
+    database:'hackersity',
     password:''
 })
 
 
 
-con.connect((error)=>{
-    if(error){
-        console.log(error)
+con.connect((err)=>{
+    if(err){
+        console.log(err)
     }else
     {
         console.log("Connected!!")
     }
 })
 
-app.post('/points', (req,res) => {
-    const {groupName,points} = req.body;
-    con.query("insert into team set ?",{groupName: groupName,points: points},(error, results) =>{
-        if(error){
-            console.log(error);
-        }else{
-            console.log("POSTED!!");
-        }
-    })
-})
+//publishing and sorting points 
 
-/*app.post('/points', (req,res) => {
-    const {judge_id,} = req.body;
-    con.query("insert into Team set ?",{group_name: group_name,points: points},(error, results) =>{
-        if(err){
-            console.log(err);
-        }else{
-            console.log("POSTED!!");
-        }
-    })
-})
-
-app.post('/points', (req, res) => {
-    const {group_name,points} = req.body;
-
-    con.query('INSERT INTO team SET ?',{groupName: group_name,points: points},(error, results) =>{
-    if(error){
-        console.log(error)
-    }else{
-        res.json({
-            success: 1,
-            message: "points inserted"
-        })
-    }
-})
-})
-
-
-
-/*app.get('/',(req,res)=>{
-    con.query('SELECT * from points',(err,rows,fields)=>{
+app.get('/publishing',(req,res)=>{
+    con.query('SELECT group_name,sum(points) as total from team group by group_name HAVING sum(points) ORDER BY total DESC',(err,rows,fields)=>{
         if(!err)
         console.log(rows);
         //res.send(rows);
@@ -72,23 +35,22 @@ app.post('/points', (req, res) => {
     })
 })
 
-*/
 
 
-app.listen(2011,(error)=>{
-    if(error){
-        console.log(error)
+
+app.listen(2211,(err)=>{
+    if(err){
+        console.log(err)
     }else{
-        console.log("Server is running port 2011")
+        console.log("Server is running port 2211")
     }
 
 })
 
 /*
-
 {
-    "groupName":"THOBELA",
-    "points":45
+    "group_name":"ICEP",
+    "points": 2
 }
 
 */
