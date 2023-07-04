@@ -11,7 +11,7 @@ const bcrypt = require('bcrypt')
 //admin registration
 router.post('/admin/register', (req, res) => {
     //console.log(req.body);
-    const {name,surname,email,Password,passwordConfirm} = req.body;
+    const {name,surname,email,password,passwordConfirm} = req.body;
 
     mysqlConnection.query('SELECT email FROM admin where email = ?', [email], async (error, results)=>{
         if(error){
@@ -23,15 +23,15 @@ router.post('/admin/register', (req, res) => {
                 message: "email already exit"
             })
    
-        }else if(Password !== passwordConfirm){
+        }else if(password !== passwordConfirm){
             return res.json({
                 success: false,
                 message: "password does not match"
             })
         }else{
-        let hashedPassword = await bcrypt.hash(Password, 8);
+        let hashedPassword = await bcrypt.hash(password, 8);
     
-        mysqlConnection.query('INSERT INTO admin SET ?',{name: name,surname :surname,email: email,Password: hashedPassword},(error, results) =>{
+        mysqlConnection.query('INSERT INTO admin SET ?',{name: name,surname :surname,email: email,password: hashedPassword},(error, results) =>{
             if(error){
                 console.log(error)
             }else{
@@ -47,7 +47,7 @@ router.post('/admin/register', (req, res) => {
 })
 //Admin login
 router.post('/admin/login', (req, res) => {
-    const { email, Password } = req.body;
+    const { email, password } = req.body;
   
     mysqlConnection.query('SELECT * FROM admin where email = ?', [email], (error, results) => {
       if (error) {
@@ -56,7 +56,7 @@ router.post('/admin/login', (req, res) => {
   
       if (results.length > 0) {
         //console.log(results[0])
-        bcrypt.compare(Password, results[0].Password, (error, response) => {
+        bcrypt.compare(password, results[0].password, (error, response) => {
           if (error) {
             return res.json({
               success: false,
@@ -89,7 +89,7 @@ router.post('/admin/login', (req, res) => {
 //judge registration
 router.post('/judge/registration', (req, res) => {
    // console.log(req.body);
-    const {Judge_name,Judge_surname,email,company_name,password,passwordConfirm} = req.body;
+    const {judge_name,judge_surname,email,company_name,password,passwordConfirm} = req.body;
 
     mysqlConnection.query('SELECT email FROM  judge where email = ?', [email], async (error, results)=>{
         if(error){
@@ -108,14 +108,15 @@ router.post('/judge/registration', (req, res) => {
             })
         }else{
         let hashedPassword = await bcrypt.hash(password, 8);
-    
-        mysqlConnection.query('INSERT INTO judge SET ?',{Judge_name: Judge_name,Judge_surname :Judge_surname, email: email,company_name: company_name, password: hashedPassword},(error, results) =>{
+        //var count = 0;
+        mysqlConnection.query('INSERT INTO judge SET ?',{judge_name: judge_name,judge_surname :judge_surname, email: email,company_name: company_name, password: hashedPassword},(error, results) =>{
             if(error){
                 console.log(error)
             }else{
                 res.json({
                     success: true,results,
                     message: "successfully registerd"
+                    
                 })
                 console.log(results);
         }   
@@ -164,7 +165,7 @@ router.post('/judge/login', (req, res) => {
 
 //getting all registerd judges
 router.get('/judge/judges', (req, res)=> {
-    mysqlConnection.query("SELECT CONCAT(Judge_name, ' ', Judge_surname ) AS full_name FROM judge ORDER BY judge_id  desc",(error, results) =>{
+    mysqlConnection.query("SELECT CONCAT(judge_name, ' ', judge_surname ) AS full_name FROM judge ORDER BY judge_id  desc",(error, results) =>{
         if(error){
             console.log(error)
         }else{
@@ -181,9 +182,9 @@ router.get('/judge/judges', (req, res)=> {
 
 router.post('/hacker/registration', (req, res) => {
     console.log(req.body);
-    const {stu_no,stu_name,stu_surname,stu_email,group_name,stu_password,passwordConfirm} = req.body;
+    const {stu_no,stu_name,stu_surname,email,group_name,password,passwordConfirm} = req.body;
 
-    mysqlConnection.query('SELECT stu_email FROM  hacker where stu_email = ?', [stu_email], async (error, results)=>{
+    mysqlConnection.query('SELECT email FROM  hacker where email = ?', [email], async (error, results)=>{
         if(error){
             console.log(error)
         }
@@ -193,15 +194,15 @@ router.post('/hacker/registration', (req, res) => {
                 message: "email already exit"
             })
    
-        }else if(stu_password !== passwordConfirm){
+        }else if(password !== passwordConfirm){
             res.json({
                 success: false,
                 message: "password does not match"
             })
         }else{
-        let hashedPassword = await bcrypt.hash(stu_password , 8);
+        let hashedPassword = await bcrypt.hash(password , 8);
     
-        mysqlConnection.query('INSERT INTO hacker SET ?',{stu_no: stu_no,stu_name :stu_name, stu_surname: stu_surname,stu_email: stu_email,group_name :group_name,stu_password: hashedPassword},(error, results) =>{
+        mysqlConnection.query('INSERT INTO hacker SET ?',{stu_no: stu_no,stu_name :stu_name, stu_surname: stu_surname,email: email,group_name :group_name,password: hashedPassword},(error, results) =>{
             if(error){
                 console.log(error)
             }else{
@@ -221,14 +222,14 @@ router.post('/hacker/registration', (req, res) => {
 router.post('/hacker/login', (req, res) => {
     console.log(req.body);
 
-    const {stu_email,stu_password} = req.body;
+    const {email,password} = req.body;
    
-    mysqlConnection.query('SELECT * FROM hacker where stu_email = ?', [stu_email],(error, results)=>{
+    mysqlConnection.query('SELECT * FROM hacker where email = ?', [email],(error, results)=>{
      if(error){
          console.log(error)
      }
       if(results.length > 0){
-        bcrypt.compare(stu_password, results[0].stu_password, (error, response) =>{
+        bcrypt.compare(password, results[0].password, (error, response) =>{
             if(error){
                 res.json({
                     success: false,
@@ -322,10 +323,10 @@ router.get('/files', (req, res)=> {
     //assigning points to team
 
     router.post('/team/points', (req,res) => {
-        const {group_name,points,isPublished = false} = req.body;
-        mysqlConnection.query("insert into team set ?",{group_name: group_name,points: points,isPublished: isPublished},(error, results) =>{
+        const {group_name,points,isPublished = false,judge_id,link=5} = req.body;
+        mysqlConnection.query("insert into team set ?",{group_name: group_name,points: points,isPublished: isPublished,judge_id:judge_id},(error, results) =>{
             if(error){
-                mysqlConnectionsole.log(error);
+                console.log(error);
             }else{
                 res.json({
                     success: true, results, 
@@ -336,7 +337,7 @@ router.get('/files', (req, res)=> {
 
     //all teams with their points
     router.get('/team', (req, res)=> {
-        mysqlConnection.query('SELECT group_name,sum(points) as total from team group by group_name',(error, results) =>{
+        mysqlConnection.query('SELECT group_name,FORMAT(sum(points)/count(team.judge_id),0) as total from team group by group_name HAVING(total)',(error, results) =>{
             if(error){
                 console.log(error)
             }else{
@@ -350,7 +351,7 @@ router.get('/files', (req, res)=> {
     //publishing resulits
 
     router.get('/publishing',(req,res)=>{
-        mysqlConnection.query('SELECT group_name,isPublished,sum(points) as total from team group by group_name HAVING sum(points)and isPublished=false ORDER BY total DESC',(err,results,fields)=>{
+        mysqlConnection.query('SELECT group_name,isPublished,FORMAT(sum(points)/count(team.judge_id),0) as total from team group by group_name HAVING sum(points)and isPublished=false ORDER BY total DESC',(err,results,fields)=>{
             if(!err)
             res.json({
                 success: true, results, 
@@ -369,6 +370,17 @@ router.get('/files', (req, res)=> {
             }) 
             //res.send(rows);
            
+            else
+            console.log(err);
+        })
+    })
+    router.get('/published',(req,res)=>{
+        mysqlConnection.query('SELECT group_name,isPublished,FORMAT(sum(points)/count(team.judge_id),0) as total from team group by group_name HAVING sum(points) AND isPublished= true ORDER BY total DESC',(err,results,fields)=>{
+            if(!err)
+            res.json({
+                success: true, results,
+            })
+            //res.send(rows);
             else
             console.log(err);
         })
@@ -424,9 +436,9 @@ router.get('/files', (req, res)=> {
   // assigning judge slots
 
 router.post('/judge/slot', (req,res) => {
-    const {slot_id,Judge_id,Judge_name,start_time,length,end_time,date} = req.body;
+    const {slot_id,judge_id,judge_name,start_time,length,end_time,date} = req.body;
 
-    mysqlConnection.query("insert into judgeslot set ?",{Judge_id:Judge_id,Judge_name:Judge_name,start_time:start_time,length:length,end_time:end_time,date:date},(error, results) =>{
+    mysqlConnection.query("insert into judgeslot set ?",{judge_id:judge_id,judge_name:judge_name,start_time:start_time,length:length,end_time:end_time,date:date},(error, results) =>{
         if(error){
             console.log(error);
         }else{
@@ -483,11 +495,39 @@ router.get('/hacker/slot', (req, res)=> {
            }                 
             }); 
        });
+/*var mystring = "SELECT DISTINCT admin.name,admin.surname,judge.judge_name,judge.judge_surname, "
+            =+ "judge.company_name ,team.group_name,sum(team.points)"
+            += "From admin,hacker,team,judge"
+            += "Where admin.Admin_id = hacker.Admin_id AND hacker.Admin_id = judge.Admin_id AND judge.judge_id = team.judge_id"
+            += "group BY team.group_name HAVING sum(team.points)"
+            += "ORDER by sum(team.points) DESC"*/
+router.get('/report',(req,res) =>{
+    mysqlConnection.query('SELECT DISTINCT admin.name,admin.surname,judge.judge_name,judge.judge_surname,judge.company_name ,hacker.group_name,FORMAT(sum(points)/count(team.judge_id),0) From admin,hacker,team,judge Where admin.Admin_id = hacker.Admin_id AND hacker.Admin_id = judge.Admin_id AND judge.judge_id = team.judge_id AND hacker.group_name = team.group_name group BY hacker.group_name HAVING sum(points)/count(team.judge_id) ORDER by sum(points)/count(team.judge_id) DESC',(error,results) =>{
+        if(error){
+            console.log(error)
+        }else{
+            res.json({
+                success:true,results
+            })
+        }
+    })
+})
+router.get('/time',(req,res) =>{
+    mysqlConnection.query('SELECT DATE_FORMAT(SYSDATE(), "%W %M %e %Y")',(error,results)=>{
+        if(error){
+            console.log(error)
+        }else{
+            res.json({
+                success:true,results
+            })
+        }
+    })
+})
 
 
     
 
 module.exports = router;
 
-
+//mysqlConnectionsole 
 
