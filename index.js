@@ -1,8 +1,10 @@
 var express = require("express")
+var cors = require("cors")
 var  mysqlConnection = require('./config/connection');
 var app=express()
 app.use(express.json())
 const bcrypt = require('bcrypt')
+app.use(cors());
 //routes steup
 const filesRouter = require('./routes/files')
 app.use('/',filesRouter);
@@ -26,8 +28,7 @@ app.listen(3000, (err) =>{
     "surname" : "mathenjwa",
     "email": "216840046@tut4life.ac.za",
     "Password": "123",
-    "passwordConfirm": "123"
-    
+    "passwordConfirm": "123" 
   }
   
   juge reg
@@ -71,9 +72,9 @@ judge slot
     "date":"03/06/2023"
 }
 {
-    "group_name":"MPHO",
-    "points":30,
-    "isPublished":false
+    "group_name":"thobela",
+    "points":64,
+    "judge_id":7
 }
   */
 

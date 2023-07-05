@@ -323,7 +323,7 @@ router.get('/files', (req, res)=> {
     //assigning points to team
 
     router.post('/team/points', (req,res) => {
-        const {group_name,points,isPublished = false,judge_id,link=5} = req.body;
+        const {group_name,points,isPublished = false,judge_id} = req.body;
         mysqlConnection.query("insert into team set ?",{group_name: group_name,points: points,isPublished: isPublished,judge_id:judge_id},(error, results) =>{
             if(error){
                 console.log(error);
@@ -337,7 +337,7 @@ router.get('/files', (req, res)=> {
 
     //all teams with their points
     router.get('/team', (req, res)=> {
-        mysqlConnection.query('SELECT group_name,FORMAT(sum(points)/count(team.judge_id),0) as total from team group by group_name HAVING(total)',(error, results) =>{
+        mysqlConnection.query('SELECT group_name,FORMAT(sum(points)/count(judge.judge_id),0) as total from team group by group_name HAVING(total)',(error, results) =>{
             if(error){
                 console.log(error)
             }else{
@@ -351,7 +351,7 @@ router.get('/files', (req, res)=> {
     //publishing resulits
 
     router.get('/publishing',(req,res)=>{
-        mysqlConnection.query('SELECT group_name,isPublished,FORMAT(sum(points)/count(team.judge_id),0) as total from team group by group_name HAVING sum(points)and isPublished=false ORDER BY total DESC',(err,results,fields)=>{
+        mysqlConnection.query('SELECT group_name,isPublished,FORMAT(sum(points)/count(judge.judge_id),0) as total from team group by group_name HAVING sum(points)and isPublished=false ORDER BY total DESC',(err,results,fields)=>{
             if(!err)
             res.json({
                 success: true, results, 
@@ -375,7 +375,7 @@ router.get('/files', (req, res)=> {
         })
     })
     router.get('/published',(req,res)=>{
-        mysqlConnection.query('SELECT group_name,isPublished,FORMAT(sum(points)/count(team.judge_id),0) as total from team group by group_name HAVING sum(points) AND isPublished= true ORDER BY total DESC',(err,results,fields)=>{
+        mysqlConnection.query('SELECT group_name,isPublished,FORMAT(sum(points)/count(judge.judge_id),0) as total from team group by group_name HAVING sum(points) AND isPublished= true ORDER BY total DESC',(err,results,fields)=>{
             if(!err)
             res.json({
                 success: true, results,
@@ -401,7 +401,7 @@ router.get('/files', (req, res)=> {
 
   
     //updating to true
-   /* router.put('/publishing/updating',(req,res)=>{
+    router.put('/publishing/updating',(req,res)=>{
         mysqlConnection.query("select isPublished from team",(err,results,fields)=>{
             console.log(results)
             if(results.isPublished == false){
@@ -431,7 +431,7 @@ router.get('/files', (req, res)=> {
       
     })
 
-    */
+    
     
   // assigning judge slots
 
@@ -495,19 +495,23 @@ router.get('/hacker/slot', (req, res)=> {
            }                 
             }); 
        });
-/*var mystring = "SELECT DISTINCT admin.name,admin.surname,judge.judge_name,judge.judge_surname, "
-            =+ "judge.company_name ,team.group_name,sum(team.points)"
-            += "From admin,hacker,team,judge"
-            += "Where admin.Admin_id = hacker.Admin_id AND hacker.Admin_id = judge.Admin_id AND judge.judge_id = team.judge_id"
-            += "group BY team.group_name HAVING sum(team.points)"
-            += "ORDER by sum(team.points) DESC"*/
+/*var mystring = "SELECT DISTINCT admin.name,admin.surname,judge.judge_name,judge.judge_surname,judge.company_name ,hacker.group_name,FORMAT(sum(points)/count(team.judge_id),0)
+From admin,hacker,team,judge 
+Where admin.Admin_id = hacker.Admin_id AND hacker.Admin_id = judge.Admin_id AND judge.judge_id = team.judge_id AND hacker.group_name = team.group_name
+group BY hacker.group_name 
+HAVING sum(points)/count(team.judge_id) 
+ORDER by sum(points)/count(team.judge_id) DESC"*/
+
+
+
 router.get('/report',(req,res) =>{
-    mysqlConnection.query('SELECT DISTINCT admin.name,admin.surname,judge.judge_name,judge.judge_surname,judge.company_name ,hacker.group_name,FORMAT(sum(points)/count(team.judge_id),0) From admin,hacker,team,judge Where admin.Admin_id = hacker.Admin_id AND hacker.Admin_id = judge.Admin_id AND judge.judge_id = team.judge_id AND hacker.group_name = team.group_name group BY hacker.group_name HAVING sum(points)/count(team.judge_id) ORDER by sum(points)/count(team.judge_id) DESC',(error,results) =>{
+    mysqlConnection.query('SELECT DISTINCT admin.name,admin.surname,judge.judge_name,judge.judge_surname,judge.company_name ,hacker.group_name,FORMAT(sum(points)/count(judge.judge_id),0) From admin,hacker,team,judge Where admin.Admin_id = hacker.Admin_id AND hacker.Admin_id = judge.Admin_id AND judge.judge_id = team.judge_id AND hacker.group_name = team.group_name group BY hacker.group_name HAVING sum(points)/count(judge.judge_id) ORDER by sum(points)/count(judge.judge_id) DESC',(error,results) =>{
         if(error){
             console.log(error)
         }else{
             res.json({
-                success:true,results
+                success:true,results,
+                //console.log(results)
             })
         }
     })
