@@ -89,7 +89,7 @@ router.post('/admin/login', (req, res) => {
 //judge registration
 router.post('/judge/registration', (req, res) => {
    // console.log(req.body);
-    const {judge_name,judge_surname,email,company_name,password,passwordConfirm} = req.body;
+    const {judge_id,judge_name,judge_surname,email,company_name,password,passwordConfirm,Admin_id} = req.body;
 
     mysqlConnection.query('SELECT email FROM  judge where email = ?', [email], async (error, results)=>{
         if(error){
@@ -109,7 +109,7 @@ router.post('/judge/registration', (req, res) => {
         }else{
         let hashedPassword = await bcrypt.hash(password, 8);
         //var count = 0;
-        mysqlConnection.query('INSERT INTO judge SET ?',{judge_name: judge_name,judge_surname :judge_surname, email: email,company_name: company_name, password: hashedPassword},(error, results) =>{
+        mysqlConnection.query('INSERT INTO judge SET ?',{judge_id:judge_id,judge_name: judge_name,judge_surname :judge_surname, email: email,company_name: company_name, password: hashedPassword,Admin_id:Admin_id},(error, results) =>{
             if(error){
                 console.log(error)
             }else{
@@ -182,7 +182,8 @@ router.get('/judge/judges', (req, res)=> {
 
 router.post('/hacker/registration', (req, res) => {
     console.log(req.body);
-    const {stu_no,stu_name,stu_surname,email,group_name,password,passwordConfirm} = req.body;
+    const {group_id,stu_no,stu_name,stu_surname,email,password,passwordConfirm,group_name,Admin_id} = req.body;
+    
 
     mysqlConnection.query('SELECT email FROM  hacker where email = ?', [email], async (error, results)=>{
         if(error){
@@ -202,7 +203,7 @@ router.post('/hacker/registration', (req, res) => {
         }else{
         let hashedPassword = await bcrypt.hash(password , 8);
     
-        mysqlConnection.query('INSERT INTO hacker SET ?',{stu_no: stu_no,stu_name :stu_name, stu_surname: stu_surname,email: email,group_name :group_name,password: hashedPassword},(error, results) =>{
+        mysqlConnection.query('INSERT INTO hacker SET ?',{group_id:group_id,stu_no: stu_no,stu_name :stu_name, stu_surname: stu_surname,email: email,group_name :group_name,password: hashedPassword,Admin_id:Admin_id},(error, results) =>{
             if(error){
                 console.log(error)
             }else{
@@ -272,16 +273,18 @@ const upload = multer({
 })
 
 router.post('/upload/files',upload.single('filename'), (req, res) => {
-    const filename = req.file.filename;
+    const file_id = req.body;
+    const name = req.file.filename;
+    const group_id = req.body ;
     const size = req.file.size / (1024*1024);
     const currentDate = new Date();
     const date = currentDate.toLocaleDateString();
     const currentTime = new Date();
     const time = currentTime.toLocaleTimeString();
-    const fileFormat = path.extname(filename);
-    console.log(fileFormat);
+    const format = path.extname(name);
+    console.log(format);
 
-    mysqlConnection.query('INSERT INTO file SET ?',{filename : filename, size: size,format: fileFormat ,date : date , time :time},(error, results) =>{
+    mysqlConnection.query('INSERT INTO file SET ?',{file_id:file_id,name : name, size: size,format: format ,date : date , time :time,group_id:group_id},(error, results) =>{
     if(error){
         console.log(error)
     }else{
@@ -323,8 +326,8 @@ router.get('/files', (req, res)=> {
     //assigning points to team
 
     router.post('/team/points', (req,res) => {
-        const {group_name,points,isPublished = false,judge_id} = req.body;
-        mysqlConnection.query("insert into team set ?",{group_name: group_name,points: points,isPublished: isPublished,judge_id:judge_id},(error, results) =>{
+        const {points_id,group_id,group_name,points,isPublished = false,judge_id} = req.body;
+        mysqlConnection.query("insert into team set ?",{points_id:points_id,group_id:group_id,group_name: group_name,points: points,isPublished: isPublished,judge_id:judge_id},(error, results) =>{
             if(error){
                 console.log(error);
             }else{
@@ -337,7 +340,7 @@ router.get('/files', (req, res)=> {
 
     //all teams with their points
     router.get('/team', (req, res)=> {
-        mysqlConnection.query('SELECT group_name,FORMAT(sum(points)/count(judge.judge_id),0) as total from team group by group_name HAVING(total)',(error, results) =>{
+        mysqlConnection.query('SELECT group_name,FORMAT(sum(points)/count(judge.judge_id),0) as total from team,judge where team.judge_id = judge.judge_id group by group_name HAVING(total)',(error, results) =>{
             if(error){
                 console.log(error)
             }else{
@@ -351,7 +354,7 @@ router.get('/files', (req, res)=> {
     //publishing resulits
 
     router.get('/publishing',(req,res)=>{
-        mysqlConnection.query('SELECT group_name,isPublished,FORMAT(sum(points)/count(judge.judge_id),0) as total from team group by group_name HAVING sum(points)and isPublished=false ORDER BY total DESC',(err,results,fields)=>{
+        mysqlConnection.query('SELECT group_name,isPublished,FORMAT(sum(points)/count(judge.judge_id),0) as total from team,judge where team.judge_id = judge.judge_id group by group_name HAVING sum(points)and isPublished=false ORDER BY total DESC',(err,results,fields)=>{
             if(!err)
             res.json({
                 success: true, results, 
@@ -375,7 +378,7 @@ router.get('/files', (req, res)=> {
         })
     })
     router.get('/published',(req,res)=>{
-        mysqlConnection.query('SELECT group_name,isPublished,FORMAT(sum(points)/count(judge.judge_id),0) as total from team group by group_name HAVING sum(points) AND isPublished= true ORDER BY total DESC',(err,results,fields)=>{
+        mysqlConnection.query('SELECT group_name,isPublished,FORMAT(sum(team.points)/count(judge.judge_id),0) as total from team,judge where team.judge_id = judge.judge_id group by group_name HAVING sum(points) AND isPublished= true ORDER BY total DESC',(err,results,fields)=>{
             if(!err)
             res.json({
                 success: true, results,
@@ -401,6 +404,7 @@ router.get('/files', (req, res)=> {
 
   
     //updating to true
+    /*
     router.put('/publishing/updating',(req,res)=>{
         mysqlConnection.query("select isPublished from team",(err,results,fields)=>{
             console.log(results)
@@ -431,14 +435,14 @@ router.get('/files', (req, res)=> {
       
     })
 
-    
+    */
     
   // assigning judge slots
 
 router.post('/judge/slot', (req,res) => {
-    const {slot_id,judge_id,judge_name,start_time,length,end_time,date} = req.body;
+    const {slot_id,judge_id,judge_name,start_time,length,end_time,date,Admin_id} = req.body;
 
-    mysqlConnection.query("insert into judgeslot set ?",{judge_id:judge_id,judge_name:judge_name,start_time:start_time,length:length,end_time:end_time,date:date},(error, results) =>{
+    mysqlConnection.query("insert into judgeslot set ?",{slot_id:slot_id,judge_id:judge_id,judge_name:judge_name,start_time:start_time,length:length,end_time:end_time,date:date,Admin_id:Admin_id},(error, results) =>{
         if(error){
             console.log(error);
         }else{
@@ -468,9 +472,9 @@ router.get('/judge/slot', (req, res)=> {
 //hacker slotes
 
 router.post('/hacker/slot', (req,res) => {
-    const {slot_id,group_name,start_time,length,end_time,date} = req.body;
+    const {slot_id,group_name,start_time,length,end_time,date,Admin_id} = req.body;
 
-    mysqlConnection.query("insert into hackerslot set ?",{group_name:group_name,start_time:start_time,length:length,end_time:end_time,date:date},(error, results) =>{
+    mysqlConnection.query("insert into hackerslot set ?",{group_name:group_name,start_time:start_time,length:length,end_time:end_time,date:date,Admin_id:Admin_id},(error, results) =>{
         if(error){
             console.log(error);
         }else{
