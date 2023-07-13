@@ -509,7 +509,7 @@ ORDER by sum(points)/count(team.judge_id) DESC"*/
 
 
 router.get('/report',(req,res) =>{
-    mysqlConnection.query('SELECT DISTINCT admin.name,admin.surname,judge.judge_name,judge.judge_surname,judge.company_name ,hacker.group_name,FORMAT(sum(points)/count(judge.judge_id),0)AS points,DATE_FORMAT(SYSDATE(), "%W %M %e %Y") From admin,hacker,team,judge Where admin.Admin_id = hacker.Admin_id AND hacker.Admin_id = judge.Admin_id AND judge.judge_id = team.judge_id AND hacker.group_name = team.group_name group BY hacker.group_name HAVING sum(points)/count(judge.judge_id) ORDER by sum(points)/count(judge.judge_id) DESC',(error,results) =>{
+    mysqlConnection.query('SELECT DISTINCT admin.name,admin.surname,judge.judge_name,judge.judge_surname,judge.company_name ,hacker.group_name,FORMAT(sum(points)/count(judge.judge_id),0)AS points,DATE_FORMAT(SYSDATE(), "%W %M %e %Y") as date From admin,hacker,team,judge Where admin.Admin_id = hacker.Admin_id AND hacker.Admin_id = judge.Admin_id AND judge.judge_id = team.judge_id AND hacker.group_name = team.group_name group BY hacker.group_name HAVING sum(points)/count(judge.judge_id) ORDER by sum(points)/count(judge.judge_id) DESC',(error,results) =>{
         if(error){
             console.log(error)
         }else{
