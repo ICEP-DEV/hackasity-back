@@ -27,7 +27,7 @@ app.listen(3000, (err) =>{
     "name" : "andries",
     "surname" : "mathenjwa",
     "email": "216840046@tut4life.ac.za",
-    "Password": "123",
+    "password": "123",
     "passwordConfirm": "123" 
   }
   
