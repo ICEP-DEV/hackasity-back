@@ -27,7 +27,7 @@ app.listen(3000, (err) =>{
     "name" : "andries",
     "surname" : "mathenjwa",
     "email": "216840046@tut4life.ac.za",
-    "Password": "123",
+    "password": "123",
     "passwordConfirm": "123" 
   }
   
@@ -44,14 +44,15 @@ app.listen(3000, (err) =>{
 
 hack reg
 {
- "stu_no" : "216840046",
- "stu_name" : "Sibusiso",
- "stu_surname" : "Gumede",
- "email" : "216840046@tut.ac.za",
- "group_name" : "thobela",
- "stu_password" : "123",
- "passwordConfirm" : "123",
- "Admin_id":1
+
+    "stu_name":	"Teboho",
+    "stu_no":"123456",
+    "stu_surname":"Koena",	
+    "email":"123456@GMAIL.COM",
+    "group_name":"123"	,
+    "password":"123",	
+    "passwordConfirm":"123",
+    "Admin_id":"1"
 }
 
 hacker time slot
@@ -80,5 +81,6 @@ judge slot
     "points":64,
     "judge_id":10
 }
+	
   */
 
