@@ -264,7 +264,7 @@ router.post('/judge/login', (req, res) => {
 
 //getting all registerd judges
 router.get('/judge/judges', (req, res)=> {
-    mysqlConnection.query("SELECT judge_name,judge_surname AS judges FROM judge ORDER BY judge_id  asc",(error, results) =>{
+    mysqlConnection.query("SELECT judge_name,judge_surname,judge_id AS judges FROM judge ORDER BY judge_id  asc",(error, results) =>{
         if(error){
             console.log(error)
         }else{
@@ -577,9 +577,9 @@ router.get('/files', (req, res)=> {
   // assigning judge slots
 
 router.post('/judge/slot', (req,res) => {
-    const {slot_id,judge_id,judge_name,start_time,length,end_time,date,Admin_id} = req.body;
+    const {slot_id,judge_name,start_time,length,end_time,date,Admin_id} = req.body;
 
-    mysqlConnection.query("insert into judgeslot set ?",{slot_id:slot_id,judge_id:judge_id,judge_name:judge_name,start_time:start_time,length:length,end_time:end_time,date:date,Admin_id:Admin_id},(error, results) =>{
+    mysqlConnection.query("insert into judgeslot set ?",{slot_id:slot_id,judge_name:judge_name,start_time:start_time,length:length,end_time:end_time,date:date,Admin_id:Admin_id},(error, results) =>{
         if(error){
             console.log(error);
         }else{

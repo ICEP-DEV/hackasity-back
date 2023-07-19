@@ -76,11 +76,21 @@ judge slot
     "Admin_id":1
 }
 {
-    "group_id":4,
-    "group_name":"thobela",
-    "points":64,
-    "judge_id":10
+    "group_name":"BIBLE"
+    "judge_id":10,
+    "points"57	
 }
+{	
+    "judge_name":"Andries",
+    "start_time":"13H55",	
+    "length":2,
+    "end_time":"14H00",	
+    "date":"2023-07-21",
+    "Admin_id":8	
+}
+
 	
+		
+
   */
 
