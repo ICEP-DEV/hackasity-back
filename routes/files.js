@@ -76,7 +76,7 @@ router.post('/admin/registration', (req, res) => {
      } else {
       let hashedPassword = await bcrypt.hash(password, 8);
     
-      mysqlConnection.query('INSERT INTO admin SET ?', { name: name, surname: surname, email: email, Password: hashedPassword }, (error, results) => {
+      mysqlConnection.query('INSERT INTO admin SET ?', { name: name, surname: surname, email: email, password: hashedPassword }, (error, results) => {
       if (error) {
        console.log(error);
       } else {

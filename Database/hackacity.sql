@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 19, 2023 at 09:46 AM
--- Server version: 10.4.25-MariaDB
--- PHP Version: 8.1.10
+-- Generation Time: Jul 19, 2023 at 02:18 PM
+-- Server version: 10.4.27-MariaDB
+-- PHP Version: 8.2.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `hackercity`
+-- Database: `hackacity`
 --
 
 -- --------------------------------------------------------
@@ -33,7 +33,7 @@ CREATE TABLE `admin` (
   `surname` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `admin`
@@ -41,7 +41,8 @@ CREATE TABLE `admin` (
 
 INSERT INTO `admin` (`Admin_id`, `name`, `surname`, `email`, `password`) VALUES
 (1, 'Sibusiso', 'Radebe', 'radebe@gmail.com', '123'),
-(7, 'sibusiso', 'radebe', 'rradebe@gmail.com', '$2b$08$Sk93HorYDm9gs5DISwKbIOn8wesHsPVOEHJ3cHrPGOIDP40fWFXj.');
+(7, 'sibusiso', 'radebe', 'rradebe@gmail.com', '$2b$08$Sk93HorYDm9gs5DISwKbIOn8wesHsPVOEHJ3cHrPGOIDP40fWFXj.'),
+(8, 'Dipono', 'mathenjwa', 'dipono@tut4life.ac.za', '$2b$08$iwMDT9Quj3Jm5/vbAFWOgubjV0UGfxP7jFLd2vtrqwtv/R/gis4jm');
 
 -- --------------------------------------------------------
 
@@ -57,7 +58,7 @@ CREATE TABLE `file` (
   `date` varchar(255) NOT NULL,
   `time` varchar(255) NOT NULL,
   `group_id` int(45) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -74,7 +75,7 @@ CREATE TABLE `hacker` (
   `group_name` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `Admin_id` int(45) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `hacker`
@@ -103,7 +104,7 @@ CREATE TABLE `hackerslot` (
   `end_time` varchar(255) NOT NULL,
   `date` varchar(255) NOT NULL,
   `Admin_id` int(45) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `hackerslot`
@@ -128,7 +129,7 @@ CREATE TABLE `judge` (
   `company_name` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `Admin_id` int(45) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `judge`
@@ -149,23 +150,22 @@ INSERT INTO `judge` (`judge_id`, `judge_name`, `judge_surname`, `email`, `compan
 
 CREATE TABLE `judgeslot` (
   `slot_id` int(45) NOT NULL,
-  `judge_id` int(45) NOT NULL,
   `judge_name` varchar(255) NOT NULL,
   `start_time` varchar(255) NOT NULL,
   `length` varchar(255) NOT NULL,
   `end_time` varchar(255) NOT NULL,
   `date` varchar(255) NOT NULL,
   `Admin_id` int(45) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `judgeslot`
 --
 
-INSERT INTO `judgeslot` (`slot_id`, `judge_id`, `judge_name`, `start_time`, `length`, `end_time`, `date`, `Admin_id`) VALUES
-(2, 8, 'Odirile Morolo', '10h00', '3 hours', '13h00', '03/06/2023', 1),
-(3, 0, 'Andries Matenjwa', '23:59', '1', '23:00', '2023-07-12', 1),
-(4, 0, 'sibusiso radebe', '12:12', '1', '12:15', '2023-07-02', 1);
+INSERT INTO `judgeslot` (`slot_id`, `judge_name`, `start_time`, `length`, `end_time`, `date`, `Admin_id`) VALUES
+(2, 'Odirile Morolo', '10h00', '3 hours', '13h00', '03/06/2023', 1),
+(3, 'Andries Matenjwa', '23:59', '1', '23:00', '2023-07-12', 1),
+(4, 'sibusiso radebe', '12:12', '1', '12:15', '2023-07-02', 1);
 
 -- --------------------------------------------------------
 
@@ -176,7 +176,7 @@ INSERT INTO `judgeslot` (`slot_id`, `judge_id`, `judge_name`, `start_time`, `len
 CREATE TABLE `presentation` (
   `presentation_id` int(45) NOT NULL,
   `group_id` int(45) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -190,7 +190,7 @@ CREATE TABLE `team` (
   `judge_id` int(45) NOT NULL,
   `points` int(45) NOT NULL,
   `isPublished` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `team`
@@ -251,8 +251,7 @@ ALTER TABLE `judge`
 --
 ALTER TABLE `judgeslot`
   ADD PRIMARY KEY (`slot_id`),
-  ADD KEY `Admin_id` (`Admin_id`),
-  ADD KEY `judge_id` (`judge_id`);
+  ADD KEY `Admin_id` (`Admin_id`);
 
 --
 -- Indexes for table `presentation`
@@ -276,7 +275,7 @@ ALTER TABLE `team`
 -- AUTO_INCREMENT for table `admin`
 --
 ALTER TABLE `admin`
-  MODIFY `Admin_id` int(45) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `Admin_id` int(45) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `file`
