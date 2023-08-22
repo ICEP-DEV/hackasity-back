@@ -1,13 +1,13 @@
-var express = require("express")
+var express = require("express");
 const router = express.Router();
-const multer = require('multer')
+const multer = require('multer');
+const bodyParser = require("body-parser");
 const path = require('path');
 var mysql =require('mysql')
 var  mysqlConnection = require('../config/connection');
 var fs = require ("fs");
 const bcrypt = require('bcrypt')
 const session = require('express-session');
-
 
 const strongPass = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/;
 
@@ -409,32 +409,34 @@ const upload = multer({
     storage: storage
 })
 
-router.post('/upload/files',upload.single('filename'), (req, res) => {
-    const file_id = req.body;
-    const name = req.file.filename;
-    const group_id = req.body ;
-    const size = req.file.size / (1024*1024);
-    const currentDate = new Date();
-    const date = currentDate.toLocaleDateString();
-    const currentTime = new Date();
-    const time = currentTime.toLocaleTimeString();
-    const format = path.extname(name);
-    console.log(format);
+// router.post('/upload/files',upload.single('filename'), (req, res) => {
+//     const file_id = req.body;
+//     const name = req.file.filename;
+//     const group_id = req.body ;
+//     const size = req.file.size / (1024*1024);
+//     const currentDate = new Date();
+//     const date = currentDate.toLocaleDateString();
+//     const currentTime = new Date();
+//     const time = currentTime.toLocaleTimeString();
+//     const format = path.extname(name);
+//     console.log(format);
 
-    mysqlConnection.query('INSERT INTO file SET ?',{file_id:file_id,name : name, size: size,format: format ,date : date , time :time,group_id:group_id},(error, results) =>{
-    if(error){
-        console.log(error)
-    }else{
-        let pdfFK = results.insertId
-        console.log(pdfFK)
-         res.json({
-            success: true, results,
-            message: " pdf inserted ",
+//     mysqlConnection.query('INSERT INTO file SET ?',{file_id:file_id,name : name, size: size,format: format ,date : date , time :time,group_id:group_id},(error, results) =>{
+//     if(error){
+//         console.log(error)
+//     }else{
+//         let pdfFK = results.insertId
+//         console.log(pdfFK)
+//          res.json({
+//             success: true, results,
+//             message: " pdf inserted ",
             
-        }) 
-    }
-})
-})
+//         }) 
+//     }
+// })
+// })
+
+
 
 // getting all uploaded files
 router.get('/files', (req, res)=> {

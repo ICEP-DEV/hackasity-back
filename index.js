@@ -4,13 +4,27 @@ var  mysqlConnection = require('./config/connection');
 var app=express()
 app.use(express.json())
 const bcrypt = require('bcrypt')
+const  bodyParser=require('body-parser') ;
 app.use(cors());
 //routes steup
 const filesRouter = require('./routes/files')
 app.use('/',filesRouter);
+/********************************************************************** */
+//WORKING WITH AN IMAGE
+const fs = require('fs')    //file system module
+const multer = require('multer')
 
+//ROUTES
+const uploadfile = require('./routes/uploadfile')
 
+app.use(bodyParser.urlencoded({ extended: false})) //ensure xampp is using the body parser
+app.use(bodyParser.json())
+app.use('/',uploadfile)
 
+app.use('/', (req, res)=>{
+    res.json('Endpoint')
+})
+/********************************************************************** */
 app.listen(3000, (err) =>{
     if (err){
         console.log(err);
