@@ -111,10 +111,10 @@ CREATE TABLE `hackerslot` (
 -- Dumping data for table `hackerslot`
 --
 
-INSERT INTO `hackerslot` (`slot_id`, `group_name`, `start_time`, `length`, `end_time`, `date`, `Admin_id`) VALUES
-(2, 'TECHS', '09h00', '1hour', '10h00', '03/06/2023', 1),
-(3, 'TECHS', '23:02', '1', '00:00', '2023-07-21', 1),
-(4, 'TECHS', '12:11', '1', '12:15', '2023-07-02', 1);
+INSERT INTO `hackerslot` (`slot_id`, `group_name`, `start_time`, `length`, `end_time`, `date`,`link`, `Admin_id`) VALUES
+(2, 'TECHS', '09h00', '1hour', '10h00', '03/06/2023','https://teams.microsoft.com/l/meetup-join/19%3ameeting_YzY3Yjg1YWEtYTM1Zi00NGQ1LWE1ODMtMzAzMGRlMmIwMzUy%40thread.v2/0?context=%7b%22Tid%22%3a%223df74539-9453-4d03-bb9d-b9102cb9ce9c%22%2c%22Oid%22%3a%2252953c19-e9e1-46ae-b282-61d269b5b8e8%22%7d', 1),
+(3, 'TECHS', '23:02', '1', '00:00', '2023-07-21','https://teams.microsoft.com/l/meetup-join/19%3ameeting_YzY3Yjg1YWEtYTM1Zi00NGQ1LWE1ODMtMzAzMGRlMmIwMzUy%40thread.v2/0?context=%7b%22Tid%22%3a%223df74539-9453-4d03-bb9d-b9102cb9ce9c%22%2c%22Oid%22%3a%2252953c19-e9e1-46ae-b282-61d269b5b8e8%22%7d', 1),
+(4, 'TECHS', '12:11', '1', '12:15', '2023-07-02','https://teams.microsoft.com/l/meetup-join/19%3ameeting_YzY3Yjg1YWEtYTM1Zi00NGQ1LWE1ODMtMzAzMGRlMmIwMzUy%40thread.v2/0?context=%7b%22Tid%22%3a%223df74539-9453-4d03-bb9d-b9102cb9ce9c%22%2c%22Oid%22%3a%2252953c19-e9e1-46ae-b282-61d269b5b8e8%22%7d', 1);
 
 -- --------------------------------------------------------
 
