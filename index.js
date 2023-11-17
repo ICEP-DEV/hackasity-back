@@ -12,6 +12,7 @@ app.use(cors());
 //routes steup
 const filesRouter = require('./routes/files')
 app.use('/',filesRouter);
+app.use('/',require('./routes/presentation'));
 
 // const presentation = require('./routes/presentation')
 // app.use('/',presentation);
