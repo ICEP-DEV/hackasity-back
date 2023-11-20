@@ -1,10 +1,58 @@
-var express = require("express")
+var express = require("express");
+//const Connection = require("mysql/lib/Connection");
 const router = express.Router();
-var  mysqlConnection = require('../config/connection');
+var connection = require('../config/connection');
 
-router.get("/test", (req, res)=>{
-    res.json('testing')
+router.post("/submit_score", (req, res) => {
+    var novality = req.body.novality * 0.15;
+    var usefulness = req.body.usefulness * 0.20;
+    var feasibility = req.body.feasibility * 0.15;
+    var technical_proficiency = req.body.technical_proficiency * 0.15;
+    var impact = req.body.impact * 0.25;
+    var safety = req.body.safety * 0.10
+
+    var total = novality + usefulness + feasibility + technical_proficiency + impact + safety
+    var score_body = [novality, usefulness, feasibility, technical_proficiency, impact, safety, total, req.body.comment, req.body.team_id, req.body.judge_id]
+    var sql_score = `INSERT INTO score(novality,usefulness,feasibility,technical_proficiency,impact,safety,total,comment,team_id,judge_id)
+     VALUES(? ,? ,? ,? ,? ,? ,? ,? , ?, ?)`
+
+    connection.query(sql_score, score_body, (err, results) => {
+        if (err) {
+            console.log(err);
+            throw err;
+        }
+        console.log(results)
+        if (results.affectedRows > 0) {
+            res.send({ success: true, message: 'Score results sent successfully!', total })
+        }
+        else {
+            res.send({ success: false, message: 'Could not send the scoce results!' })
+        }
+    })
+
 })
+
+
+router.get('/get_all results', (req, res) => {
+    var sql = `SELECT AVG(total), s.team_id, COUNT(judge_id), group_name
+            FROM score s, team t
+            where s.team_id = t.team_id
+            GROUP by team_id;`
+
+    connection.query(sql, (err, results) => {
+        if (err) {
+            console.log(err)
+            throw err
+        }
+        if (results.length > 0) {
+            res.send({ results, success: true })
+        }
+        else {
+            res.send({ success: false, message: 'Results not published yet' })
+        }
+    })
+})
+
 
 
 
