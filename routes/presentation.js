@@ -32,12 +32,27 @@ router.post("/submit_score", (req, res) => {
 
 })
 
+router.get('/teams',(req, res)=>{
+    var sql = `SELECT * FROM team`
+    
+    connection.query(sql, (err, results)=>{
+        if(err) console.log(err)
+        if(results.length > 0){
+            res.send({success:true, results})
+        }
+        else{
+            res.send({success:false, message:"no team found"})
+        }
+    })
+})
 
-router.get('/get_all results', (req, res) => {
-    var sql = `SELECT AVG(total), s.team_id, COUNT(judge_id), group_name
+
+router.get('/get_all_results', (req, res) => {
+    var sql = `SELECT AVG(total) average, s.team_id, COUNT(judge_id), group_name
             FROM score s, team t
             where s.team_id = t.team_id
-            GROUP by team_id;`
+            GROUP by team_id
+            ORDER BY average DESC;`
 
     connection.query(sql, (err, results) => {
         if (err) {
