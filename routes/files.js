@@ -669,10 +669,4 @@ router.get('/time',(req,res) =>{
     })
 })
 
-
-    
-
 module.exports = router;
-
-//mysqlConnectionsole 
-
