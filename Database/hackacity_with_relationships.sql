@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 17, 2023 at 10:54 AM
+-- Generation Time: Nov 22, 2023 at 10:27 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -184,17 +184,27 @@ CREATE TABLE `presentation` (
 
 CREATE TABLE `score` (
   `score_id` int(11) NOT NULL,
-  `novality` decimal(3,3) DEFAULT NULL,
-  `usefulness` decimal(3,3) DEFAULT NULL,
-  `feasibility` decimal(3,3) DEFAULT NULL,
-  `technical_proficiency` decimal(3,3) DEFAULT NULL,
-  `impact` decimal(3,3) DEFAULT NULL,
-  `safety` decimal(3,3) DEFAULT NULL,
-  `total` decimal(3,3) DEFAULT NULL,
+  `novality` double DEFAULT NULL,
+  `usefulness` double DEFAULT NULL,
+  `feasibility` double DEFAULT NULL,
+  `technical_proficiency` double DEFAULT NULL,
+  `impact` double DEFAULT NULL,
+  `safety` double DEFAULT NULL,
+  `total` double DEFAULT NULL,
   `comment` varchar(255) DEFAULT NULL,
   `team_id` int(11) DEFAULT NULL,
   `judge_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `score`
+--
+
+INSERT INTO `score` (`score_id`, `novality`, `usefulness`, `feasibility`, `technical_proficiency`, `impact`, `safety`, `total`, `comment`, `team_id`, `judge_id`) VALUES
+(8, 7.5, 10, 7.5, 8.25, 12.5, 4.5, 50.25, 'fair', 1, 10),
+(9, 9, 12, 9, 9.75, 15, 5.5, 60.25, 'good', 2, 10),
+(10, 6.75, 10.8, 6.75, 7.5, 11.25, 4.5, 47.55, 'not so good', 1, 13),
+(11, 9, 12, 9, 9.75, 15, 5, 59.75, 'good', 2, 13);
 
 -- --------------------------------------------------------
 
@@ -363,7 +373,7 @@ ALTER TABLE `presentation`
 -- AUTO_INCREMENT for table `score`
 --
 ALTER TABLE `score`
-  MODIFY `score_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `score_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `slot`
