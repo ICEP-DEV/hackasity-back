@@ -70,5 +70,30 @@ router.get('/get_all_results', (req, res) => {
 
 
 
+router.get('/get_all_report', (req, res) => {
+    var sql = `SELECT name,surname,judge_name,judge_surname, company_name,group_name,total
+    From admin a, judge j,score s,team t
+    Where a.Admin_id = j.Admin_id
+    And   t.team_id = s.team_id;`
+    
+
+    connection.query(sql, (err, report) => {
+        if (err) {
+            console.log(err)
+            throw err
+        }
+        if (report.length > 0) {
+            res.send({ report, success: true })
+        }
+        else {
+            res.send({ success: false, message: 'Report not published yet' })
+        }
+    })
+})
+
+
+
+
+
 
 module.exports = router;
