@@ -49,10 +49,10 @@ router.get('/teams',(req, res)=>{
 // gets the SCORES
 router.get('/get_scores', (req, res) => {
     var sql = `SELECT s.total, s.comment, s.team_id, judge_name,judge_surname, group_name
-            FROM score s, team t, judge j
-            Where   s.team_id = t.team_id
-            AND     j.judge_id = s.judge_id
-            ORDER BY group_name;`
+                FROM    score s, team t, judge j
+                Where   s.team_id = t.team_id
+                AND     j.judge_id = s.judge_id
+                ORDER BY group_name;`
 
     connection.query(sql, (err, results) => {
         if (err) {
